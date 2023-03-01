@@ -13,7 +13,7 @@ permissions:
   pull-requests: write
 
 env:
-  CONTAINER_IMAGE: quay.io/robszumski/log4jpoc:2.16.0
+  CONTAINER_IMAGE: quay.io/robszumski/log4jpoc:2.17.1
 
 jobs:
   
