@@ -70,3 +70,4 @@ jobs:
           labels: 'vuln=shellshock'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           sbom-file: /tmp/sbom.syft.json
+          image-id: "${{ steps.build.outputs.digest }}"
