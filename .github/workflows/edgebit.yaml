@@ -63,7 +63,7 @@ jobs:
           format: syft-json
 
       - name: Upload SBOM to EdgeBit
-        uses: edgebitio/edgebit-build@main
+        uses: edgebitio/edgebit-build@fix-typo
         with:
           edgebit-url: https://rob.edgebit.io
           token: ${{ secrets.EDGEBIT_ACCESS_TOKEN }}
