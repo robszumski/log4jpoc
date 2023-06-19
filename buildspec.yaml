@@ -21,7 +21,7 @@ phases:
       - echo "Installing syft v0.74.1"
       - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v0.74.1
       - echo "Installing gh CLI"
-      - type -p yum-config-manager >/dev/null || sudo yum install yum-utils
+      - type -p yum-config-manager >/dev/null || sudo yum install -y yum-utils
       - sudo yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
       - sudo yum -y install gh
   pre_build:
