@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     IMAGE_TAG: '2.17.1'
-    IMAGE: "quay.io/robszumski/log4jpoc:$IMAGE_TAG"
+    IMAGE: 'quay.io/robszumski/log4jpoc'
     NAME: 'log4jpoc'
     EDGEBIT_URL: 'https://rob.edgebit.io'
     GH_REPO: 'https://github.com/robszumski/log4jpoc'
@@ -30,11 +30,12 @@ phases:
       - BASE_BRANCH='main'
       - GH_PR_NUMBER=$(gh pr list --repo $GH_REPO --search $LATEST_SHA --json number --jq .[].number)
       - BASE_SHA=$(gh api repos/robszumski/log4jpoc/pulls/$GH_PR_NUMBER | jq -r .base.sha)
+      - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
   build:
     commands:
-      - docker build -t $IMAGE .
-      - ./syft packages $IMAGE -o syft > $NAME.syft
-      - ./ebctl upload-sbom-for-ci --component log4jpoc-codebuild --tag latest -tag $IMAGE_TAG --repo $GH_REPO --commit $LATEST_SHA --image-tag $IMAGE $NAME.syft > ./edgebit-comment-body.json
+      - docker build -t $FULL_IMAGE .
+      - ./syft packages $FULL_IMAGE -o syft > $NAME.syft
+      - ./ebctl upload-sbom-for-ci --component log4jpoc-codebuild --tag latest -tag $IMAGE_TAG --repo $GH_REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft > ./edgebit-comment-body.json
       - |
           if [ $(cat ./edgebit-comment-body.json | jq -r .skip_comment) ] ; then
             gh pr comment $GH_PR_NUMBER --repo $GH_REPO --body $(cat ./edgebit-comment-body.json | jq -r .comment_body)
