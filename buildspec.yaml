@@ -29,7 +29,7 @@ phases:
       - LATEST_SHA=$(git rev-parse HEAD)
       - BASE_BRANCH='main'
       - GH_PR_NUMBER=$(gh pr list --repo $GH_REPO --search $LATEST_SHA --json number --jq .[].number)
-      - BASE_SHA=$(gh api repos/robszumski/log4jpoc/pulls/$GH_PR_NUMBER | jq -r .base.sha
+      - BASE_SHA=$(gh api repos/robszumski/log4jpoc/pulls/$GH_PR_NUMBER | jq -r .base.sha)
   build:
     commands:
       - docker build -t $IMAGE .
