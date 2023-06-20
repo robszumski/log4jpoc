@@ -35,7 +35,7 @@ phases:
     commands:
       - docker build -t $FULL_IMAGE .
       - ./syft packages $FULL_IMAGE -o syft > $NAME.syft
-      - ./ebctl upload-sbom-for-ci --component log4jpoc-codebuild --tag latest -tag $IMAGE_TAG --repo $GH_REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft > ./edgebit-comment-body.json
+      - ./ebctl upload-sbom-for-ci --component log4jpoc-codebuild --tag latest --tag $IMAGE_TAG --repo $GH_REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft > ./edgebit-comment-body.json
       - |
           if [ $(cat ./edgebit-comment-body.json | jq -r .skip_comment) ] ; then
             gh pr comment $GH_PR_NUMBER --repo $GH_REPO --body $(cat ./edgebit-comment-body.json | jq -r .comment_body)
