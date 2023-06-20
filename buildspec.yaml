@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_TAG: '2.14.1'
+    IMAGE_TAG: '2.17.1'
     IMAGE: 'quay.io/robszumski/log4jpoc'
     NAME: 'log4jpoc'
     EDGEBIT_URL: 'https://rob.edgebit.io'
