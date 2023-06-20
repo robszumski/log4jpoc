@@ -1,6 +1,7 @@
 version: 0.2
 
 env:
+  shell: bash
   variables:
     IMAGE_TAG: '2.14.1'
     IMAGE: 'quay.io/robszumski/log4jpoc'
@@ -77,6 +78,6 @@ phases:
               --header "Authorization: Bearer ${GH_TOKEN}" \
               --header "X-GitHub-Api-Version: 2022-11-28" \
               --header "Accept: application/vnd.github+json" \
-              -d '{"body": "$(cat ./edgebit-comment-body.json | jq -r .comment_body)"}' \
+              -d "{\"body\": \"$(cat ./edgebit-comment-body.json | jq -r .comment_body)\"}" \
               --url "${GH_API_LOCATION}/issues/${GH_PR_NUMBER}/comments"
           fi
