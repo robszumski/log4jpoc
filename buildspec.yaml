@@ -61,7 +61,7 @@ phases:
       # Upload SBOM for diff-ing and get a PR comment body back
       - |
         ./ebctl upload-sbom-for-ci \
-          --component log4jpoc-codebuild \
+          --component $NAME \
           --tag latest \
           --tag $IMAGE_TAG \
           --repo $GH_REPO \
