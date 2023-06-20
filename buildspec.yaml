@@ -27,10 +27,14 @@ phases:
   pre_build:
     commands:
       - LATEST_SHA=$(git rev-parse HEAD)
-      - BASE_BRANCH='main'
       - GH_PR_NUMBER=$(gh pr list --repo $GH_REPO --search $LATEST_SHA --json number --jq .[].number)
       - echo $GH_PR_NUMBER
-      - BASE_SHA=$(gh api repos/robszumski/log4jpoc/pulls/$GH_PR_NUMBER | jq -r .base.sha)
+      - |
+          if [[ "$GH_PR_NUMBER" =~ ^[0-9]+$ ]] then
+            BASE_SHA=$(gh api repos/robszumski/log4jpoc/pulls/$GH_PR_NUMBER | jq -r .base.sha)
+          else
+            BASE_SHA=$LATEST_SHA
+          fi
       - echo $BASE_SHA
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
   build:
