@@ -29,7 +29,9 @@ phases:
       - LATEST_SHA=$(git rev-parse HEAD)
       - BASE_BRANCH='main'
       - GH_PR_NUMBER=$(gh pr list --repo $GH_REPO --search $LATEST_SHA --json number --jq .[].number)
+      - cat $GH_PR_NUMBER
       - BASE_SHA=$(gh api repos/robszumski/log4jpoc/pulls/$GH_PR_NUMBER | jq -r .base.sha)
+      - cat $BASE_SHA
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
   build:
     commands:
