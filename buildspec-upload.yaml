@@ -5,7 +5,7 @@ env:
   variables:
     IMAGE_TAG: '2.14.1'
     IMAGE: 'quay.io/robszumski/log4jpoc'
-    NAME: 'log4jpoc'
+    NAME: 'log4jpoc-codebuild'
     EDGEBIT_URL: 'https://rob.edgebit.io'
     GH_REPO: 'https://github.com/robszumski/log4jpoc'
   secrets-manager:
