@@ -16,7 +16,7 @@ phases:
   install:
     commands:
       # Install ebctl v0.5.1
-      - curl -sL $(curl -s https://api.github.com/repos/edgebitio/edgebit-cli/releases/tags/v0.5.1 | jq -r '.assets[] | select(.name|match("^edgebit-cli_Linux_x86_64(.*)tar.gz$")) | .browser_download_url') --output ebctl.tar.gz
+      - curl -sL https://install.edgebit.io/releases/edgebit-cli/latest/edgebit-cli_Linux_x86_64.tar.gz --output ebctl.tar.gz
       - tar -xvf ebctl.tar.gz
       - chmod +x ebctl
       # Install syft v0.74.1
