@@ -45,4 +45,4 @@ phases:
       # Generate SBOM
       - ./syft packages $FULL_IMAGE -o syft > $NAME.syft
       # Upload SBOM for diff-ing
-      - ./ebctl upload-sbom --component $NAME $EDGEBIT_EXTRA_TAG --tag $AMD_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
+      - ./ebctl upload-sbom --component $NAME $EDGEBIT_EXTRA_TAG --tag $IMAGE_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
