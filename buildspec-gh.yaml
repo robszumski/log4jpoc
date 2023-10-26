@@ -22,13 +22,9 @@ phases:
       # Install syft v0.74.1
       - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v0.74.1
       # Install gh CLI
-      - echo "Installing gh CLI"
-      - |
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-        && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-        && apt update \
-        && apt install gh -y
+      - sudo yum install git -y
+      - curl -L https://github.com/cli/cli/releases/download/v2.37.0/gh_2.37.0_linux_amd64.rpm > gh_2.37.0_linux_amd64.rpm
+      - rpm -i gh_2.37.0_linux_amd64.rpm
   pre_build:
     commands:
       # Gather GitHub details
