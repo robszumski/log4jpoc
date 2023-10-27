@@ -39,7 +39,6 @@ phases:
             EDGEBIT_EXTRA_TAG="pr-${GH_PR_NUMBER}"
           fi
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
-      - echo $EDGEBIT_EXTRA_TAG
   build:
     commands:
       - docker build -t $FULL_IMAGE .
