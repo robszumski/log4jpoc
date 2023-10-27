@@ -7,7 +7,7 @@ env:
     IMAGE: 'quay.io/robszumski/log4jpoc'
     NAME: 'log4jpoc-codebuild'
     EDGEBIT_URL: 'https://rob.edgebit.io'
-    GH_REPO: 'https://github.com/robszumski/log4jpoc'
+    REPO: 'https://github.com/robszumski/log4jpoc'
   secrets-manager:
     EDGEBIT_API_KEY: rob.edgebit.io/EdgeBitAPIKey
     GH_TOKEN: robszumski/GitHub/AccessToken
@@ -29,20 +29,21 @@ phases:
     commands:
       # Gather GitHub details
       - LATEST_SHA=$(git rev-parse HEAD)
-      - GH_DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef edgebitio/platform | jq -r .defaultBranchRef.name)
-      - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1")
+      - GH_DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef $REPO | jq -r .defaultBranchRef.name)
+      - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1" || echo "0")
       - GH_PR_NUMBER=$(gh pr list --repo "$REPO" --search "$LATEST_SHA" --json number --jq .[].number)
       - |
           if [[ "$GH_IS_DEFAULT" = 1 ]]; then
-            EDGEBIT_EXTRA_TAG="--tag latest"
+            EDGEBIT_EXTRA_TAG="latest"
           else
-            EDGEBIT_EXTRA_TAG="--tag pr-${GH_PR_NUMBER}"
+            EDGEBIT_EXTRA_TAG="pr-${GH_PR_NUMBER}"
           fi
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
+      - echo $EDGEBIT_EXTRA_TAG
   build:
     commands:
       - docker build -t $FULL_IMAGE .
       # Generate SBOM
       - ./syft packages $FULL_IMAGE -o syft > $NAME.syft
       # Upload SBOM for diff-ing
-      - ./ebctl upload-sbom --component $NAME $EDGEBIT_EXTRA_TAG --tag $AMD_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
+      - ./ebctl upload-sbom --component $NAME --tag $EDGEBIT_EXTRA_TAG --tag $IMAGE_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
