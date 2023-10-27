@@ -30,7 +30,7 @@ phases:
       # Gather GitHub details
       - LATEST_SHA=$(git rev-parse HEAD)
       - GH_DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef edgebitio/platform | jq -r .defaultBranchRef.name)
-      - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1")
+      - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1" || echo "0")
       - GH_PR_NUMBER=$(gh pr list --repo "$REPO" --search "$LATEST_SHA" --json number --jq .[].number)
       - |
           if [[ "$GH_IS_DEFAULT" = 1 ]]; then
