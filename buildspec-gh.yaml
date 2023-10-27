@@ -34,9 +34,9 @@ phases:
       - GH_PR_NUMBER=$(gh pr list --repo "$REPO" --search "$LATEST_SHA" --json number --jq .[].number)
       - |
           if [[ "$GH_IS_DEFAULT" = 1 ]]; then
-            EDGEBIT_EXTRA_TAG="--tag latest"
+            EDGEBIT_EXTRA_TAG="latest"
           else
-            EDGEBIT_EXTRA_TAG="--tag pr-${GH_PR_NUMBER}"
+            EDGEBIT_EXTRA_TAG="pr-${GH_PR_NUMBER}"
           fi
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
   build:
@@ -45,4 +45,4 @@ phases:
       # Generate SBOM
       - ./syft packages $FULL_IMAGE -o syft > $NAME.syft
       # Upload SBOM for diff-ing
-      - ./ebctl upload-sbom --component $NAME $EDGEBIT_EXTRA_TAG --tag $IMAGE_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
+      - ./ebctl upload-sbom --component $NAME --tag $EDGEBIT_EXTRA_TAG --tag $IMAGE_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
