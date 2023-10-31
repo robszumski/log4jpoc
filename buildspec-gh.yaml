@@ -29,6 +29,7 @@ phases:
     commands:
       # Gather GitHub details
       - LATEST_SHA=$(git rev-parse HEAD)
+      - echo "$LATEST_SHA"
       - GH_DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef $REPO | jq -r .defaultBranchRef.name)
       - echo "$GH_DEFAULT_BRANCH"
       - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1" || echo "0")
