@@ -1,10 +1,6 @@
 set -ex
 
 # Check for required env vars
-if [[ -z "$GH_TOKEN" ]]; then
-  echo "GH_TOKEN env var is required"
-  exit 1
-fi
 if [[ -z "$EDGEBIT_API_KEY" ]]; then
   echo "EDGEBIT_API_KEY env var is required"
   exit 1
@@ -31,15 +27,8 @@ chmod +x ebctl
 # Install syft v0.74.1
 curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v0.74.1
 
-# Install gh CLI if needed
-if ! command -v gh &> /dev/null; then
-  sudo yum install git -y
-  curl -L https://github.com/cli/cli/releases/download/v2.37.0/gh_2.37.0_linux_amd64.rpm > gh_2.37.0_linux_amd64.rpm
-  sudo rpm -i gh_2.37.0_linux_amd64.rpm
-fi
-
 # Install time
-sudo yum install time -y
+sudo yum --quiet install time -y
 
 # Gather GitHub details
 LATEST_SHA=$(git rev-parse HEAD)
@@ -56,10 +45,10 @@ $(which time) -v ./syft packages $LOCAL_IMAGE -o syft > $COMPONENT.syft
 
 # Upload SBOM for diff-ing
 ./ebctl upload-sbom \
-  --component $COMPONENT \
-  --tag $IMAGE_TAG \
+  --component "$COMPONENT" \
+  --tag "$IMAGE_TAG" \
   $EDGEBIT_EXTRA_TAG \
-  --repo $REPO \
-  --commit $LATEST_SHA \
-  --image-tag $REMOTE_IMAGE \
-  $COMPONENT.syft
+  --repo "$REPO" \
+  --commit "$LATEST_SHA" \
+  --image-tag "$REMOTE_IMAGE" \
+  "$COMPONENT.syft"
