@@ -22,7 +22,7 @@ phases:
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
       # - docker build -t $FULL_IMAGE .
       - docker pull --quiet $FULL_IMAGE
-      - docker tag $FULL_IMAGE $IMAGE:$IMAGE_TAG
+      - docker tag $FULL_IMAGE $GITHUB_REPOSITORY:$IMAGE_TAG
       # run edgebit (this will trap errors)
       - |
         bash .cicd/edgebit.sh \
