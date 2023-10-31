@@ -38,6 +38,9 @@ if ! command -v gh &> /dev/null; then
   sudo rpm -i gh_2.37.0_linux_amd64.rpm
 fi
 
+# Install time
+sudo yum install time -y
+
 # Gather GitHub details
 LATEST_SHA=$(git rev-parse HEAD)
 GITHUB_PULL_REQUEST=$(echo "${CODEBUILD_WEBHOOK_TRIGGER}" | sed -e "s/^pr\///")
