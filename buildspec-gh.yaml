@@ -29,17 +29,14 @@ phases:
     commands:
       # Gather GitHub details
       - LATEST_SHA=$(git rev-parse HEAD)
-      - echo "$LATEST_SHA"
       - GH_DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef $REPO | jq -r .defaultBranchRef.name)
-      - echo "$GH_DEFAULT_BRANCH"
       - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1" || echo "0")
-      - echo "$GH_IS_DEFAULT"
       - GH_PR_NUMBER=$(gh pr list --repo "$REPO" --search "$LATEST_SHA" --json number --jq .[].number)
-      - echo "$GH_PR_NUMBER"
+      - echo "Default branch $GH_DEFAULT_BRANCH / Build is on default $GH_IS_DEFAULT / PR number $GH_PR_NUMBER"
       - |
           if [[ "$GH_IS_DEFAULT" = 1 ]]; then
             EDGEBIT_EXTRA_TAG="latest"
-          else
+          elif [[ ! -z "$GH_PR_NUMBER" ]]; then
             EDGEBIT_EXTRA_TAG="pr-${GH_PR_NUMBER}"
           fi
       - echo "$EDGEBIT_EXTRA_TAG"
