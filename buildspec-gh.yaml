@@ -15,16 +15,21 @@ env:
 phases:
   build:
     commands:
+      # Parse Github source parameters
+      - GITHUB_PULL_REQUEST=$(echo "${CODEBUILD_WEBHOOK_TRIGGER}" | sed -e "s/^pr\///")
+      - GITHUB_REPOSITORY=$(echo "${CODEBUILD_SOURCE_REPO_URL}" | sed -e "s/https:\/\/github.com\/.*\///" | sed -e "s/.git//" )
+      - GITHUB_ORGANIZATION=$(echo "${CODEBUILD_SOURCE_REPO_URL}" | sed -e "s/https:\/\/github.com\///" | sed -e "s/\/.*.git//" )
       - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
       # - docker build -t $FULL_IMAGE .
       - docker pull --quiet $FULL_IMAGE
       - docker tag $FULL_IMAGE $IMAGE:$IMAGE_TAG
+      # run edgebit (this will trap errors)
       - |
         bash .cicd/edgebit.sh \
           --version $IMAGE_TAG \
-          --local-image $IMAGE:$IMAGE_TAG \
+          --local-image $GITHUB_REPOSITORY:$IMAGE_TAG \
           --remote-image $FULL_IMAGE \
           --repo $REPO \
-          --component-name $NAME \
-        || true # this will trap errors
+          --component-name "${GITHUB_REPOSITORY}-codebuild" \
+        || true
       
