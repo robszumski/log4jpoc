@@ -13,38 +13,16 @@ env:
     GH_TOKEN: robszumski/GitHub/AccessToken
 
 phases:
-  install:
-    commands:
-      # Install ebctl v0.5.1
-      - curl -sL https://install.edgebit.io/releases/edgebit-cli/latest/edgebit-cli_Linux_x86_64.tar.gz --output ebctl.tar.gz
-      - tar -xvf ebctl.tar.gz
-      - chmod +x ebctl
-      # Install syft v0.74.1
-      - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v0.74.1
-      # Install gh CLI
-      - sudo yum install git -y
-      - curl -L https://github.com/cli/cli/releases/download/v2.37.0/gh_2.37.0_linux_amd64.rpm > gh_2.37.0_linux_amd64.rpm
-      - rpm -i gh_2.37.0_linux_amd64.rpm
-  pre_build:
-    commands:
-      # Gather GitHub details
-      - LATEST_SHA=$(git rev-parse HEAD)
-      - GH_DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef $REPO | jq -r .defaultBranchRef.name)
-      - GH_IS_DEFAULT=$(git merge-base --is-ancestor HEAD origin/$GH_DEFAULT_BRANCH && echo "1" || echo "0")
-      - GH_PR_NUMBER=$(gh pr list --repo "$REPO" --search "$LATEST_SHA" --json number --jq .[].number)
-      - echo "Default branch $GH_DEFAULT_BRANCH / Build is on default $GH_IS_DEFAULT / PR number $GH_PR_NUMBER"
-      - |
-          if [[ "$GH_IS_DEFAULT" = 1 ]]; then
-            EDGEBIT_EXTRA_TAG="latest"
-          elif [[ ! -z "$GH_PR_NUMBER" ]]; then
-            EDGEBIT_EXTRA_TAG="pr-${GH_PR_NUMBER}"
-          fi
-      - echo "$EDGEBIT_EXTRA_TAG"
-      - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
   build:
     commands:
+      - FULL_IMAGE="$IMAGE:$IMAGE_TAG"
       - docker build -t $FULL_IMAGE .
-      # Generate SBOM
-      - ./syft packages $FULL_IMAGE -o syft > $NAME.syft
-      # Upload SBOM for diff-ing
-      - ./ebctl upload-sbom --component $NAME --tag $EDGEBIT_EXTRA_TAG --tag $IMAGE_TAG --repo $REPO --commit $LATEST_SHA --image-tag $FULL_IMAGE $NAME.syft
+      - |
+        bash .cicd/edgebit.sh \
+          --version $IMAGE_TAG \
+          --local-image $IMAGE:$IMAGE_TAG \
+          --remote-image $FULL_IMAGE \
+          --repo $REPO \
+          --component-name $NAME \
+        || true # this will trap errors
+      
