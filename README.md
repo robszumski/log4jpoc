@@ -1,4 +1,4 @@
-# Apache Log4j cve example repo and docker images
+# Apache Log4j CVE example repo and docker images
 
 This repository holds code to reproduce the [Log4j cve](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228) 
 
