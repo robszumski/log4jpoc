@@ -3,11 +3,11 @@ version: 0.2
 env:
   shell: bash
   variables:
-    IMAGE_TAG: '2.14.1'
-    IMAGE: 'quay.io/robszumski/log4jpoc'
-    NAME: 'log4jpoc-codebuild'
-    EDGEBIT_URL: 'https://rob.edgebit.io'
-    REPO: 'https://github.com/robszumski/log4jpoc'
+    IMAGE_TAG: "2.14.1"
+    IMAGE: "quay.io/robszumski/log4jpoc"
+    NAME: "log4jpoc-codebuild"
+    EDGEBIT_URL: "https://rob.edgebit.io"
+    REPO: "https://github.com/robszumski/log4jpoc"
   secrets-manager:
     EDGEBIT_API_KEY: rob.edgebit.io/EdgeBitAPIKey
     GH_TOKEN: robszumski/GitHub/AccessToken
@@ -32,4 +32,3 @@ phases:
           --repo "http://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}" \
           --component-name "${GITHUB_REPOSITORY}-codebuild" \
         || true
-      

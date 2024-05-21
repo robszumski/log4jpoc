@@ -24,8 +24,8 @@ curl -sL https://install.edgebit.io/releases/edgebit-cli/latest/edgebit-cli_Linu
 tar -xvf ebctl.tar.gz
 chmod +x ebctl
 
-# Install syft v0.74.1
-curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v0.74.1
+# Install syft v1.4.0
+curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v1.4.0
 
 # Install time
 sudo yum --quiet install time -y
@@ -41,7 +41,9 @@ fi
 echo "$EDGEBIT_EXTRA_TAG"
 
 # Generate SBOM and log timing info
-$(which time) -v ./syft packages $LOCAL_IMAGE -o syft > $COMPONENT.syft
+$(which time) -v ./syft scan $LOCAL_IMAGE \
+    --config ./cicd/container-syft.yaml \
+    --output spdx-json=$COMPONENT.spdx.json
 
 # Upload SBOM for diff-ing
 ./ebctl upload-sbom \
@@ -51,4 +53,5 @@ $(which time) -v ./syft packages $LOCAL_IMAGE -o syft > $COMPONENT.syft
   --repo "$REPO" \
   --commit "$LATEST_SHA" \
   --image-tag "$REMOTE_IMAGE" \
-  "$COMPONENT.syft"
+  --image-manifest $(docker image inspect --format '{{join .RepoDigests ","}}' $LOCAL_IMAGE) \
+  "$COMPONENT.spdx.json"

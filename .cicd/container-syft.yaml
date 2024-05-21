@@ -1,0 +1,51 @@
+output: syft
+
+check-for-app-update: false
+
+catalogers:
+  - alpm-db-cataloger
+  - apk-db-cataloger
+  - binary-cataloger
+  - cargo-auditable-binary-cataloger
+  - cocoapods-cataloger
+  - conan-cataloger
+  - conan-info-cataloger
+  - dart-pubspec-lock-cataloger
+  - dotnet-deps-cataloger
+  - dotnet-portable-executable-cataloger
+  - dpkg-db-cataloger
+  - elixir-mix-lock-cataloger
+  - erlang-otp-application-cataloger
+  - erlang-rebar-lock-cataloger
+  - go-module-binary-cataloger
+  - go-module-file-cataloger
+  - graalvm-native-image-cataloger
+  - haskell-cataloger
+  - java-archive-cataloger
+  - java-gradle-lockfile-cataloger
+  - java-pom-cataloger
+  - javascript-lock-cataloger
+  - javascript-package-cataloger
+  - nix-store-cataloger
+  - php-composer-installed-cataloger
+  - php-composer-lock-cataloger
+  - portage-cataloger
+  - python-installed-package-cataloger
+  - python-package-cataloger
+  - r-package-cataloger
+  - rpm-archive-cataloger
+  - rpm-db-cataloger
+  - ruby-gemfile-cataloger
+  - ruby-gemspec-cataloger
+  - ruby-installed-gemspec-cataloger
+  - rust-cargo-lock-cataloger
+  - sbom-cataloger
+  - swift-package-manager-cataloger
+  - wordpress-plugins-cataloger
+
+golang:
+  search-remote-licenses: true
+
+javascript:
+  search-remote-licenses: true
+  npm-base-url: "https://registry.npmjs.org"
