@@ -53,6 +53,7 @@ $(which time) -v ./syft scan $LOCAL_IMAGE \
   --repo "$REPO" \
   --commit "$LATEST_SHA" \
   --image-tag "$REMOTE_IMAGE" \
-  --image-manifest $(docker image inspect --format '{{join .RepoDigests ","}}' $LOCAL_IMAGE) \
+  --image-id $(docker image inspect --format '{{.ID}}' $LOCAL_IMAGE) \
+  --repo-digest $(docker image inspect --format '{{join .RepoDigests ","}}' $LOCAL_IMAGE) \
   --pull-request "$GITHUB_PULL_REQUEST" \
   "$COMPONENT.spdx.json"
